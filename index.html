@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{.TableName}}</title>
+<style>
+    .table-container {
+        width: 100%;
+        overflow-x: auto;
+        border: 1px solid #ccc;
+    }
+
+    .grid-steps {
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: minmax(280px, max-content); 
+    }
+
+    .column-step {
+        display: grid;
+        grid-template-rows: 50px 40px 60px repeat(auto-fill, 40px); 
+        /* So far the rows dimenssions are fixed*/
+    }
+
+    .grid-cell {
+        border: 1px solid #333;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        white-space: nowrap;
+        background: #fff;
+        margin-top: -1px; 
+        margin-left: -1px; 
+    }
+
+    .header {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+</style>
+</head>
+
+<body>
+
+    <h2>{{.TableName}}</h2>
+    <p>{{.Steps}}</p>
+    <form action="/add" method="post">
+        <input type="text" name="stepName" />
+        <button>Add new Step</button>
+    </form>
+
+ <div class="table-container">
+    <div class="grid-steps">
+        {{range $index, $element := .Steps}}
+        <div class="column-step">
+            
+            <div class="grid-cell header">Step {{$element.Pos}}: {{$element.Name}}</div>
+            
+            <div class="grid-cell"><strong>Variables</strong></div>
+            
+            <div class="grid-cell">
+                <form action="/add-val" method="post" style="display: inline-flex; gap: 4px;">
+                    <input type="text" name="variableName" style="width: 60px;"/>
+                    <input type="text" name="variableValue" style="width: 60px;"/>
+                    <input type="hidden" name="step" value="{{$element.Pos}}" />
+                    <button>Add</button>
+                </form>
+            </div>
+
+            {{range $iv, $vel := $element.Variables}}
+            <div class="grid-cell">
+                {{$iv}}: {{$vel.Name}} : {{$vel.PresentedValue}}
+            </div>
+            {{end}}
+
+        </div>
+        {{end}}
+    </div>
+</div>
+
+</body>
+
+</html>
