@@ -69,9 +69,9 @@
                 </form>
             </div>
 
-            {{range $iv, $vel := $element.Variables}}
+            {{range $i := ranger $element.NumberOfColumns}}
             <div class="grid-cell">
-                {{$iv}}: {{$vel.Name}} : {{$vel.PresentedValue}}
+                <p>hola</p>
             </div>
             {{end}}
 
