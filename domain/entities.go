@@ -37,7 +37,7 @@ type Result struct {
 }
 
 func (c *Context) AddStep(stepName string, position int) bool {
-	if stepName == "" || position <= len(c.Steps) {
+	if stepName == "" || position < len(c.Steps) {
 		c.ErrorText = "Step creation failed, either no name or invalid position"
 		return false
 	}
