@@ -1,4 +1,12 @@
+2.1. Create the basic tests to allow unit testing for new operations
 3. Create the operations for manipulating the variables
+    - Add a new one to a Step [ ]
+    - Modify the value of a variable from the same step (change the initial value)  [ ]
+    - Modify the value of a variable on another step (change value) [ ]
+    - Delete completely a variable [ ]
+    - Delete a variable from a step onwards [ ]
+    - Hide a variable [ ]
+    - Re-show a variable [ ]
 4. Create a default flow
 5. Add a clear flow button
 6. Manage storing flows (Import export as json)

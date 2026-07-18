@@ -56,6 +56,7 @@ func (c *Context) evaluate () {
 		aliveVars = aliveVars + len(c.Steps[i].VariableTriads)
 		c.Steps[i].NumberOfColumns = aliveVars
 	}
+	context.ErrorText = ""
 
 }
 
