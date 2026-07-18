@@ -7,6 +7,7 @@
     - Delete a variable from a step onwards [ ]
     - Hide a variable [ ]
     - Re-show a variable [ ]
+3.1. Refactor and reduce magic strings
 4. Create a default flow
 5. Add a clear flow button
 6. Manage storing flows (Import export as json)
