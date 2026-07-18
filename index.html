@@ -70,7 +70,7 @@
                     <button>Add</button>
                 </form>
             </div>
-            {{range $i := ranger $element.NumberOfColumns}}
+            {{range $i := iterate $element.NOfRows}}
             <div class="grid-cell">
                         {{ $var := findVar $element $i  }}
                         {{ if $var.Ok }}
