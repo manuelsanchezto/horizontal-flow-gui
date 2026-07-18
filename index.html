@@ -46,6 +46,8 @@
 
     <h2>{{.TableName}}</h2>
     <p>{{.Steps}}</p>
+    <p> Variables: {{.Variables}}</p>
+    <p style="color:red;"> ErrorText: {{.ErrorText}}</p>
     <form action="/add" method="post">
         <input type="text" name="stepName" />
         <button>Add new Step</button>
@@ -68,10 +70,14 @@
                     <button>Add</button>
                 </form>
             </div>
-
             {{range $i := ranger $element.NumberOfColumns}}
             <div class="grid-cell">
-                <p>hola</p>
+                        {{ $var := findVar $element $i  }}
+                        {{ if $var.Ok }}
+                            <p>{{ $var.Variable.Name }}: {{ $var.Value }}</p>
+                        {{ else }}
+                        <p>------->-------</p>
+                        {{end}}
             </div>
             {{end}}
 

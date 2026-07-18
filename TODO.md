@@ -1,5 +1,3 @@
-1. Try to move the Variables to the Top context level.
-2. Create the interaction between steps and variables on the steps level.
 3. Create the operations for manipulating the variables
 4. Create a default flow
 5. Add a clear flow button
@@ -12,3 +10,8 @@ pre-8. Try and set some Flex with tables
     - IFrames to manage the edition
     - Show/Hide controls
 9. Consider a UI-flags option (use horizontal/vertical)
+
+
+DONE:
+1. Try to move the Variables to the Top context level.
+2. Create the interaction between steps and variables on the steps level.

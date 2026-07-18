@@ -30,6 +30,13 @@ type Context struct {
 	TableName string
 	Steps     []Step
 	Variables []Variable
+	ErrorText string
+}
+
+type Result struct {
+	Variable Variable
+	Value string
+	Ok bool
 }
 
 
@@ -56,8 +63,8 @@ func (s *Step) addVariableTriad (variable int, row int, value int) {
 	s.VariableTriads = append(s.VariableTriads, [3]int{variable,row,value})
 }
 
-func (s *Step) addNewVariable (variable int) {
-	s.addVariableTriad(variable, 1,0)
+func (s *Step) addNewVariable (columnIndex int) {
+	s.addVariableTriad(len(context.Variables), columnIndex, 0)
 }
 
 
@@ -94,9 +101,19 @@ func valFromStepAddHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	index := step.NumberOfColumns
-	step.addNewVariable(index)
 	variableName := r.Form.Get("variableName")
 	variableValue := r.Form.Get("variableValue")
+	if variableName == "" {
+		context.ErrorText = "The variable has to have a name"
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	if variableValue == "" {
+		context.ErrorText = "The variable has to have a value"
+		http.Redirect(w, r, "/", http.StatusSeeOther)
+		return
+	}
+	step.addNewVariable(index)
 	variable := Variable{Name:variableName, Values: []string{}, IsVisible: true}
 	variable.Values = append(variable.Values, variableValue)
 	context.Variables = append(context.Variables, variable)
@@ -113,8 +130,22 @@ func rangeFunc(n int) []int {
 	return r
 }
 
+
+func  findVariableByColumn(s Step, i int) (Result){
+	for _, triad:= range s.VariableTriads{
+		if i == triad[1]{
+			return Result{
+				Variable:context.Variables[triad[0]],
+				Value:context.Variables[triad[0]].Values[triad[2]],
+				Ok:true,
+			}
+		}
+	}
+	return Result{}
+}
+
 func fillIndex(w http.ResponseWriter) {
-	funcMap := template.FuncMap{"ranger": rangeFunc,}
+	funcMap := template.FuncMap{"ranger": rangeFunc, "findVar":findVariableByColumn}
 	template, error := template.New("index.html").Funcs(funcMap).ParseFiles("index.html")
 	if error != nil {
 		http.Error(w, error.Error(), http.StatusInternalServerError)
