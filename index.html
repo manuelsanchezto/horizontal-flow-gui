@@ -48,7 +48,7 @@
     <p>{{.Steps}}</p>
     <p> Variables: {{.Variables}}</p>
     <p style="color:red;"> ErrorText: {{.ErrorText}}</p>
-    <form action="/add" method="post">
+    <form action="/add-step" method="post">
         <input type="text" name="stepName" />
         <button>Add new Step</button>
     </form>
@@ -63,7 +63,7 @@
             <div class="grid-cell"><strong>Variables</strong></div>
             
             <div class="grid-cell">
-                <form action="/add-val" method="post" style="display: inline-flex; gap: 4px;">
+                <form action="/add-variable" method="post" style="display: inline-flex; gap: 4px;">
                     <input type="text" name="variableName" style="width: 60px;"/>
                     <input type="text" name="variableValue" style="width: 60px;"/>
                     <input type="hidden" name="step" value="{{$element.Pos}}" />

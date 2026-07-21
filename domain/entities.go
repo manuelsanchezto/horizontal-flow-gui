@@ -45,6 +45,12 @@ func (c *Context) AddStep(stepName string, position int) bool {
 	return true
 }
 
+func (c *Context) AddStepAtTheEnd (stepName string) bool {
+	c.Steps = append(c.Steps, Step {Name: stepName, Pos: len(c.Steps)})
+	return true
+}
+
+
 func (c *Context) AddNewVariable(stepPos int, vName string, vValue string) bool{
 	if stepPos >= len(c.Steps) || stepPos < 0 || vName == "" || vValue == "" {
 		c.ErrorText = "Variable creation failed, review the input"
@@ -88,6 +94,31 @@ func (c *Context) Evaluate () {
 	}
 	c.ErrorText = ""
 
+}
+
+func (c *Context) ChangeValueOfVariable(vIndex int, vValueIndex int, vValue string) bool {
+	if  vIndex >= len(c.Variables) || vValueIndex >= len(c.Variables[vIndex].Values) {
+		c.ErrorText = "Either the variable does not exists or the value is not yet set"
+		return false
+	}
+	c.Variables[vIndex].Values[vValueIndex] = vValue
+	return true
+}
+
+func (c *Context) AddNewValueOnVariable (sIndex int, vIndex int, vValue string) bool{
+	// TODO: Is missing a check that for that step there is not already a value for that Variable
+	if sIndex >= len(c.Steps) && vIndex >= len(c.Variables) {
+		c.ErrorText = "The value set parameters are not valid"
+		return false
+	}
+	c.Steps[sIndex].VariableTriads = append( c.Steps[sIndex].VariableTriads, 
+		[3]int {
+			vIndex, 
+			c.Steps[sIndex].NOfRows, 
+			len(c.Variables[vIndex].Values),
+		})
+	c.Variables[vIndex].Values = append(c.Variables[vIndex].Values, vValue)
+	return true
 }
 
 

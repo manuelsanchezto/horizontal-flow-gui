@@ -27,7 +27,7 @@ func stepAddHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	stepName := r.Form.Get("stepName")
-	Ok := context.AddStep(stepName, len(context.Steps))
+	Ok := context.AddStepAtTheEnd(stepName)
 	if Ok {
 		context.Evaluate()
 	}
@@ -47,6 +47,49 @@ func valueAddHandler(w http.ResponseWriter, r *http.Request) {
 	variableValue := r.Form.Get("variableValue")
 
 	Ok := context.AddNewVariable(stepIndex, variableName, variableValue)
+	if Ok {
+		context.Evaluate()
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+func changeValueHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	variableIndex, err := strconv.Atoi(r.Form.Get("variableIndex"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	valueIndex, errVI := strconv.Atoi(r.Form.Get("valueIndex"))
+	if errVI != nil {
+		http.Error(w, errVI.Error(), http.StatusInternalServerError)
+	}
+	newValue := r.Form.Get("valueIndex")
+	Ok := context.ChangeValueOfVariable(variableIndex, valueIndex, newValue)
+	if Ok {
+		context.Evaluate()
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
+
+func addValueHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	stepIndex, err := strconv.Atoi(r.Form.Get("step"))
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	variableIndex, errVI := strconv.Atoi(r.Form.Get("variableIndex"))
+	if errVI != nil {
+		http.Error(w, errVI.Error(), http.StatusInternalServerError)
+	}
+	variableValue := r.Form.Get("variableValue")
+	Ok := context.AddNewValueOnVariable(stepIndex, variableIndex, variableValue)
 	if Ok {
 		context.Evaluate()
 	}
@@ -79,7 +122,9 @@ var context d.Context
 
 func main() {
 	http.HandleFunc("/", handler)
-	http.HandleFunc("/add", stepAddHandler)
-	http.HandleFunc("/add-val", valueAddHandler)
+	http.HandleFunc("/add-step", stepAddHandler)
+	http.HandleFunc("/add-variable", valueAddHandler)
+	http.HandleFunc("/change-value", changeValueHandler)
+	http.HandleFunc("/add-value", addValueHandler)
 	http.ListenAndServe(":8090", nil)
 }
