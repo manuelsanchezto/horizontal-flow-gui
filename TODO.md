@@ -2,8 +2,10 @@
 3. Create the operations for manipulating the variables
     - Modify the value of a variable from the same step (change the initial value)  [X]
     - Modify the value of a variable on another step (change value) [X]
-    - Delete completely a variable [ ]
+    - Delete completely a variable [X]
     - Delete a variable from a step onwards [ ]
+    - Delete a value from the variable [ ]
+    - Delete a step [ ]
     - Hide a variable [ ]
     - Re-show a variable [ ]
 3.1. Refactor and reduce magic strings

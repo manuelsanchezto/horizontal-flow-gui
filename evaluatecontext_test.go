@@ -1,9 +1,10 @@
 package main
 
 import (
-	"testing"
-	d "github.com/manuelsanchezto/horizontal-flow-gui/domain"
 	"math/rand/v2"
+	"testing"
+
+	d "github.com/manuelsanchezto/horizontal-flow-gui/domain"
 )
 
 func TestEvaluateDoNotFail (t *testing.T){
@@ -100,6 +101,56 @@ func TestVariableAddNewVariable (t *testing.T){
 	if context.Steps[1].VariableTriads[0] != [3]int {0,0,1} {
 		t.Error("The new value of the variable has not been correclty linked to the Step")
 	}
+}
 
+func TestVariableDeletion (t *testing.T){
+	context = d.Context{}
+	context.AddStepAtTheEnd("test step 1")
+	context.AddStepAtTheEnd("test step 2")
+	context.AddNewVariable(0, "vname", "vval")
+	if len(context.Steps[0].VariableTriads) != 1 {
+		t.Error("Addition of variable onto Step failed")
+	}
+	if context.ErrorText != "" {
+		t.Errorf("Expected no error on the deletion found %s", context.ErrorText)
+	}
+	context.DeleteVariable(0)
+	if len(context.Variables) != 0 {
+		t.Error("Deletion of variable Failed")
+	}
+	if context.ErrorText != "" {
+		t.Errorf("Expected no error on the deletion found %s", context.ErrorText)
+	}
+}
+
+
+func TestVariableDeletionOnManySteps (t *testing.T){
+	context = d.Context{}
+	context.AddStepAtTheEnd("test step 1")
+	context.AddStepAtTheEnd("test step 2")
+	context.AddStepAtTheEnd("test step 3")
+	context.AddStepAtTheEnd("test step 4")
+	context.AddStepAtTheEnd("test step 5")
+	context.AddStepAtTheEnd("test step 6")
+	context.AddNewVariable(0, "vname", "vval")
+	context.AddNewValueOnVariable(2, 0, "New value")
+	context.AddNewValueOnVariable(3, 0, "New value")
+	if len(context.Steps[0].VariableTriads) != 1 &&
+	len(context.Steps[2].VariableTriads) != 1 &&
+	len(context.Steps[3].VariableTriads) != 1 {
+		t.Error("Addition of variable onto Step failed")
+	}
+	context.DeleteVariable(0)
+	if len(context.Variables) != 0 {
+		t.Error("Deletion of variable Failed")
+	}
+	if context.ErrorText != "" {
+		t.Errorf("Expected no error on the deletion found %s", context.ErrorText)
+	}
+	if len(context.Steps[0].VariableTriads) != 0 &&
+	len(context.Steps[2].VariableTriads) != 0 &&
+	len(context.Steps[3].VariableTriads) != 0 {
+		t.Error("Addition of variable onto Step failed")
+	}
 }
 

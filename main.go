@@ -96,6 +96,22 @@ func addValueHandler(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "/", http.StatusSeeOther)
 }
 
+func deleteVariableHandler(w http.ResponseWriter, r *http.Request) {
+	err := r.ParseForm()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	variableIndex, errVI := strconv.Atoi(r.Form.Get("variableIndex"))
+	if errVI != nil {
+		http.Error(w, errVI.Error(), http.StatusInternalServerError)
+	}
+	Ok := context.DeleteVariable(variableIndex)
+	if Ok {
+		context.Evaluate()
+	}
+	http.Redirect(w, r, "/", http.StatusSeeOther)
+}
+
 func rangeFunc(n int) []int {
 	r:= make([]int ,n)
 	for i := range n{
@@ -126,5 +142,6 @@ func main() {
 	http.HandleFunc("/add-variable", valueAddHandler)
 	http.HandleFunc("/change-value", changeValueHandler)
 	http.HandleFunc("/add-value", addValueHandler)
+	http.HandleFunc("/delete-value", deleteVariableHandler)
 	http.ListenAndServe(":8090", nil)
 }

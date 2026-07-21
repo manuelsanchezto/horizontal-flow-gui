@@ -2,6 +2,7 @@ package domain
 
 import (
 	"errors"
+	"slices"
 )
 
 type Variable struct {
@@ -64,6 +65,7 @@ func (c *Context) AddNewVariable(stepPos int, vName string, vValue string) bool{
 	step := c.Steps[stepPos]
 	step.NOfRows = step.NOfRows + 1
 	step.VariableTriads = append(step.VariableTriads, [3]int {len(c.Variables),step.NOfRows,0})
+	c.Steps[stepPos] = step 
 	c.Variables = append(c.Variables, Variable{Name: vName, Values: []string{vValue}, IsVisible: true})
 	return true
 }
@@ -121,5 +123,19 @@ func (c *Context) AddNewValueOnVariable (sIndex int, vIndex int, vValue string) 
 	return true
 }
 
-
+func (c *Context) DeleteVariable(variableIndex int) bool {
+	if variableIndex > len(c.Variables) {
+		c.ErrorText = "Could not find the Variable to delete"
+		return false
+	}
+	for i  := range c.Steps {
+		for j, triad:= range c.Steps[i].VariableTriads {
+			if triad[0] == variableIndex {
+				c.Steps[i].VariableTriads = slices.Delete(c.Steps[i].VariableTriads, j, j+1)
+			}
+		}
+	}
+	c.Variables = slices.Delete(c.Variables, variableIndex, variableIndex+1)
+	return true
+}
 
